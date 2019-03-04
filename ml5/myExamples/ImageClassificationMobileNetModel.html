@@ -11,8 +11,12 @@
 <p>The MobileNet model labeled this as
 <span id="result">...</span> with a confidence of
 <span id="probability">...</span></p>
-<img src="https://ml5js.org/docs/assets/img/bird.jpg"
-crossorigin="anonymous" id="image" width="400">
+<!--<img src="https://ml5js.org/docs/assets/img/bird.jpg"-->
+<!--crossorigin="anonymous" id="image" width="400">-->
+
+	<img src="kitchen.jpg"
+		 crossorigin="anonymous" id="image" width="400">
+<script src="https://github.com/ml5js/ml5-examples/tree/master/p5js/LSTM/LSTM_Text"></script>
 
 	<script>
 // The image we want to classify
@@ -32,6 +36,25 @@ const classifier = ml5.imageClassifier('MobileNet', function() {
 classifier.predict(image, function(err, results) {
 	result.innerText = results[0].className;
 	probability.innerText = results[0].probability.toFixed(4);
+	console.log(results)
+});
+
+
+
+
+
+
+// Create the character level generator with a pre trained model
+const rnn = ml5.charRNN('models/bolaño/', modelLoaded);
+
+// When the model is loaded
+function modelLoaded() {
+	console.log('Model Loaded!');
+}
+
+// Generete content
+rnn.generate({ seed: 'the meaning of pizza is' }, function(err, results){
+	console.log(results);
 });
 
 </script>

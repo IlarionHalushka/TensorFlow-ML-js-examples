@@ -1,16 +1,14 @@
 const tf = require('@tensorflow/tfjs')
 const mobilenet = require('@tensorflow-models/mobilenet');
-require('@tensorflow/tfjs-node')
-
 const fs = require('fs');
 const jpeg = require('jpeg-js');
+require('@tensorflow/tfjs-node');
 
-const NUMBER_OF_CHANNELS = 3
+const NUMBER_OF_CHANNELS = 3;
 
 const readImage = path => {
 	const buf = fs.readFileSync(path);
-	const pixels = jpeg.decode(buf, true);
-	return pixels;
+	return jpeg.decode(buf, true);
 };
 
 const imageByteArray = (image, numChannels) => {
@@ -24,16 +22,14 @@ const imageByteArray = (image, numChannels) => {
 		}
 	}
 
-	return values
-}
+	return values;
+};
 
 const imageToInput = (image, numChannels) => {
 	const values = imageByteArray(image, numChannels)
 	const outShape = [image.height, image.width, numChannels];
-	const input = tf.tensor3d(values, outShape, 'int32');
-
-	return input
-}
+	return tf.tensor3d(values, outShape, 'int32');
+};
 
 const loadModel = async path => {
 	const mn = new mobilenet.MobileNet(1, 1);
@@ -56,6 +52,7 @@ const classify = async (model, path) => {
 };
 
 // if (process.argv.length !== 4) throw new Error('incorrect arguments: node script.js <MODEL> <IMAGE_FILE>')
-
 // classify(process.argv[2], process.argv[3])
 classify(process.argv[2], process.argv[2])
+
+// to run classification: node node.js ant.jpg

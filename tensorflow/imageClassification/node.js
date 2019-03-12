@@ -8,10 +8,10 @@ const jpeg = require('jpeg-js');
 const NUMBER_OF_CHANNELS = 3
 
 const readImage = path => {
-	const buf = fs.readFileSync(path)
-	const pixels = jpeg.decode(buf, true)
-	return pixels
-}
+	const buf = fs.readFileSync(path);
+	const pixels = jpeg.decode(buf, true);
+	return pixels;
+};
 
 const imageByteArray = (image, numChannels) => {
 	const pixels = image.data
@@ -37,17 +37,20 @@ const imageToInput = (image, numChannels) => {
 
 const loadModel = async path => {
 	const mn = new mobilenet.MobileNet(1, 1);
-	// mn.path = `file://${path}`
+	mn.path = `file://mobile-net/model.json`;
 	await mn.load();
 	return mn
 };
 
 const classify = async (model, path) => {
+	console.time()
 	const image = readImage(path)
 	const input = imageToInput(image, NUMBER_OF_CHANNELS)
 
-	const  mn_model = await loadModel(model)
+	const  mn_model = await loadModel(model);
+
 	const predictions = await mn_model.classify(input)
+	console.timeEnd()
 
 	console.log('classification results:', predictions)
 };

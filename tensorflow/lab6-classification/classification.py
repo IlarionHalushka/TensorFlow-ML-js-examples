@@ -13,7 +13,7 @@ def input_fn():
   return tf.train.limit_epochs(
       tf.convert_to_tensor(points, dtype=tf.float32), num_epochs=1)
 
-num_clusters = 5
+num_clusters = 2
 kmeans = tf.contrib.factorization.KMeansClustering(
     num_clusters=num_clusters, use_mini_batch=False)
 
@@ -35,3 +35,29 @@ for i, point in enumerate(points):
   cluster_index = cluster_indices[i]
   center = cluster_centers[cluster_index]
   print 'point:', point, 'is in cluster', cluster_index, 'centered at', center
+
+
+
+# examples of tensorboard from https://itnext.io/how-to-use-tensorboard-5d82f8654496
+
+sess = tf.Session()
+
+
+x_matrix = tf.get_variable('x_matrix', shape=[30, 40], initializer=tf.truncated_normal_initializer(mean=0, stddev=1))
+
+histogram_summary = tf.summary.histogram('My_first_histo_summary', x_matrix)
+init = tf.global_variables_initializer()
+writer = tf.summary.FileWriter('./points', sess.graph)
+
+for step in range(100):
+    sess.run(init)
+    summary2 = sess.run(histogram_summary)
+    writer.add_summary(summary2, step)
+
+
+# merged = tf.summary.merge_all()
+# train_writer = tf.summary.FileWriter(FLAGS.log_dir + '/train', sess.graph)
+
+# test_writer = tf.summary.FileWriter(FLAGS.log_dir + '/test')
+# tf.global_variables_initializer().run()
+

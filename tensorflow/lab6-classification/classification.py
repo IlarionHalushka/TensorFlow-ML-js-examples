@@ -39,6 +39,9 @@ for i, point in enumerate(points):
 
 
 # examples of tensorboard from https://itnext.io/how-to-use-tensorboard-5d82f8654496
+# other examples https://www.tensorflow.org/tensorboard/r1/histograms
+# https://medium.com/@anthony_sarkis/tensorboard-quick-start-in-5-minutes-e3ec69f673af
+#
 
 sess = tf.Session()
 

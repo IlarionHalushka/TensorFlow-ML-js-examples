@@ -4,9 +4,10 @@
 
 import numpy as np
 import tensorflow as tf
+from matplotlib import pyplot as plt
 
 num_points = 100
-dimensions = 8
+dimensions = 2
 points = np.random.uniform(0, 1000, [num_points, dimensions])
 
 def input_fn():
@@ -26,7 +27,7 @@ for _ in xrange(num_iterations):
   if previous_centers is not None:
     print 'delta:', cluster_centers - previous_centers
   previous_centers = cluster_centers
-  print 'score:', kmeans.score(input_fn)
+#   print 'score:', kmeans.score(input_fn)
 print 'cluster centers:', cluster_centers
 
 # map the input points to their clusters
@@ -34,33 +35,33 @@ cluster_indices = list(kmeans.predict_cluster_index(input_fn))
 for i, point in enumerate(points):
   cluster_index = cluster_indices[i]
   center = cluster_centers[cluster_index]
-  print 'point:', point, 'is in cluster', cluster_index, 'centered at', center
+  color = ("red", "green")[cluster_index == 0]
+  plt.plot(point[0], point[1], marker='x', markersize=15, color=color)
+#   print 'point:', point, 'is in cluster', cluster_index, 'centered at', center
 
 
 
-# examples of tensorboard from https://itnext.io/how-to-use-tensorboard-5d82f8654496
-# other examples https://www.tensorflow.org/tensorboard/r1/histograms
-# https://medium.com/@anthony_sarkis/tensorboard-quick-start-in-5-minutes-e3ec69f673af
-#
+# Label the graph axes.
+plt.ylabel("y")
+plt.xlabel("x")
 
-sess = tf.Session()
+# Plot a scatter plot from our data sample.
+firstEls = [];
+secondEls = [];
 
+for i in range(0, num_points):
+    firstEls.append(points[i][0])
 
-x_matrix = tf.get_variable('x_matrix', shape=[30, 40], initializer=tf.truncated_normal_initializer(mean=0, stddev=1))
+for i in range(0, num_points):
+    secondEls.append(points[i][1])
 
-histogram_summary = tf.summary.histogram('My_first_histo_summary', x_matrix)
-init = tf.global_variables_initializer()
-writer = tf.summary.FileWriter('./points', sess.graph)
+plt.scatter(firstEls, secondEls)
 
-for step in range(100):
-    sess.run(init)
-    summary2 = sess.run(histogram_summary)
-    writer.add_summary(summary2, step)
+plt.plot(cluster_centers[0][0], cluster_centers[0][1], marker='o', markersize=15, color="red")
+plt.plot(cluster_centers[1][0], cluster_centers[1][1], marker='o', markersize=15, color="green")
 
+# Display graph.
+plt.show()
 
-# merged = tf.summary.merge_all()
-# train_writer = tf.summary.FileWriter(FLAGS.log_dir + '/train', sess.graph)
-
-# test_writer = tf.summary.FileWriter(FLAGS.log_dir + '/test')
-# tf.global_variables_initializer().run()
+# to run script run ipython classification.py
 

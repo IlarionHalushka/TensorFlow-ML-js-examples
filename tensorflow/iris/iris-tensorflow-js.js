@@ -41,10 +41,14 @@ model.compile({
 const startTime = Date.now()
 model.fit(trainingData, outputData, {epochs: 100})
   .then((history) => {
-    // console.log(history)
+    console.log(history)
     model.predict(testingData).print()
-  })
+  });
 // test network
 
 
-console.log('HELLO')
+
+// to run script first build it with:
+// parcel --target=node iris.js & nodemon dist/iris.js
+// then from current folder run built file:
+// node ./dist/iris-tensorflow-js

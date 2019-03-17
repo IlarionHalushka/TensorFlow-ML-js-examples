@@ -137,6 +137,3 @@ plt.scatter(sample["total_rooms"], sample["median_house_value"])
 
 # Display graph.
 plt.show()
-
-
-print(x_0, x_1, y_0, y_1)

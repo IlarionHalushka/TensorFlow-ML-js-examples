@@ -84,7 +84,7 @@ def val_input():
 estimator = tf.estimator.LinearRegressor(feature_columns=feature_cols)
 
 # We are now ready to train our estimator.
-estimator.train(input_fn=train_input, steps=None)
+est_trained = estimator.train(input_fn=train_input, steps=100)
 
 # When training is done, we will be ready to evaluate our model.
 train_e = estimator.evaluate(input_fn=train_input)

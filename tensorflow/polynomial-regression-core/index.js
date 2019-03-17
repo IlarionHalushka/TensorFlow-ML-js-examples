@@ -205,7 +205,7 @@ async function showTrainingHistory() {
   }, trainingHistory, ['loss']);
 }
 
-showTrainingHistory();
+// showTrainingHistory();
 
 
 
@@ -220,35 +220,41 @@ const outputData = tf.tensor1d(dataTraining.outputs);
 const model2 = tf.sequential();
 
 async function train2() {
-  model2.add(tf.layers.dense({
-    inputShape: [3],
-    units: 3,
-  }));
   await model2.add(tf.layers.dense({
     inputShape: [3],
-    activation: "relu",
+    units: 2,
+  }));
+  await model2.add(tf.layers.dense({
+    inputShape: [2],
     units: 1,
   }));
-
+  // await model2.add(tf.layers.dense({
+  //   inputShape: [5],
+  //   activation: "softmax",
+  //   //   activation: "relu", // relu, sigmoid, softmax, relu6
+  //   units: 1,
+  // }));
   await model2.compile({
     loss: "meanSquaredError",
-    optimizer: tf.train.adam(0.5),
+    optimizer: tf.train.adam(0.001),
   });
 
 // // train/fit our network
-  return model2.fit(trainingData, outputData, {epochs: 25})
+  return model2.fit(trainingData, outputData, {epochs: 25, shuffle: true})
 }
 
 
 
 async function showTrainingHistory2() {
   const trainingHistory = await train2();
-  console.log(trainingHistory);
+  console.log('2', trainingHistory);
 
   tfVis.show.history({
     name: '2Training History2',
     tab: '2Training2'
   }, trainingHistory, ['loss']);
+
+  console.log('show 2 train')
 }
 
 showTrainingHistory2();

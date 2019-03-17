@@ -239,6 +239,8 @@ async function train2() {
   return model2.fit(trainingData, outputData, {epochs: 25})
 }
 
+
+
 async function showTrainingHistory2() {
   const trainingHistory = await train2();
   console.log(trainingHistory);
@@ -250,3 +252,9 @@ async function showTrainingHistory2() {
 }
 
 showTrainingHistory2();
+
+
+// TO MAKE THIS INDEX.JS run first build it with
+// parcel index.js
+// AND in index.html require script with source ./dist/index.js
+// then open index.html in browser and click ` to open up the charts

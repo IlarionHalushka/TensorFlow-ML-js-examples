@@ -17,8 +17,8 @@
 
 import * as tf from '@tensorflow/tfjs';
 import * as tfVis from '@tensorflow/tfjs-vis';
-import {generateData} from './data';
-import {plotData, plotDataAndPredictions, renderCoefficients} from './ui';
+import { generateData } from './data';
+import { plotData, plotDataAndPredictions, renderCoefficients } from './ui';
 
 /**
  * We want to learn the coefficients that give correct solutions to the
@@ -43,7 +43,6 @@ const b = tf.variable(tf.scalar(Math.random()));
 const c = tf.variable(tf.scalar(Math.random()));
 const d = tf.variable(tf.scalar(Math.random()));
 
-
 // Step 2. Create an optimizer, we will use this later. You can play
 // with some of these values to see how the model performs.
 const numIterations = 75;
@@ -64,7 +63,8 @@ const optimizer = tf.train.sgd(learningRate);
 function predict(x) {
   // y = a * x ^ 3 + b * x ^ 2 + c * x + d
   return tf.tidy(() => {
-    return a.mul(x.pow(tf.scalar(3, 'int32')))
+    return a
+      .mul(x.pow(tf.scalar(3, 'int32')))
       .add(b.mul(x.square()))
       .add(c.mul(x))
       .add(d);
@@ -80,7 +80,10 @@ function predict(x) {
  */
 function loss(prediction, labels) {
   // Having a good error function is key for training a machine learning model
-  const error = prediction.sub(labels).square().mean();
+  const error = prediction
+    .sub(labels)
+    .square()
+    .mean();
   return error;
 }
 
@@ -113,14 +116,14 @@ async function train(xs, ys, numIterations) {
 }
 
 async function learnCoefficients() {
-  tfVis.visor().surface({name: 'My First Surface', tab: 'Input Data'});
+  tfVis.visor().surface({ name: 'My First Surface', tab: 'Input Data' });
 
-  const trueCoefficients = {a: -.8, b: -.2, c: .9, d: .5};
+  const trueCoefficients = { a: -0.8, b: -0.2, c: 0.9, d: 0.5 };
   const trainingData = generateData(100, trueCoefficients);
 
   // Plot original data
   renderCoefficients('#data .coeff', trueCoefficients);
-  await plotData('#data .plot', trainingData.xs, trainingData.ys)
+  await plotData('#data .plot', trainingData.xs, trainingData.ys);
 
   // See what the predictions look like with random coefficients
   renderCoefficients('#random .coeff', {
@@ -131,7 +134,11 @@ async function learnCoefficients() {
   });
   const predictionsBefore = predict(trainingData.xs);
   await plotDataAndPredictions(
-    '#random .plot', trainingData.xs, trainingData.ys, predictionsBefore);
+    '#random .plot',
+    trainingData.xs,
+    trainingData.ys,
+    predictionsBefore
+  );
 
   // Train the model!
   await train(trainingData.xs, trainingData.ys, numIterations);
@@ -145,7 +152,11 @@ async function learnCoefficients() {
   });
   const predictionsAfter = predict(trainingData.xs);
   await plotDataAndPredictions(
-    '#trained .plot', trainingData.xs, trainingData.ys, predictionsAfter);
+    '#trained .plot',
+    trainingData.xs,
+    trainingData.ys,
+    predictionsAfter
+  );
 
   predictionsBefore.dispose();
   predictionsAfter.dispose();
@@ -156,8 +167,8 @@ async function learnCoefficients() {
       name: 'show.fitCallbacks',
       tab: 'Training',
       styles: {
-        height: '1000px'
-      }
+        height: '1000px',
+      },
     };
     console.log('HERE');
     const callbacks = tfVis.show.fitCallbacks(container, metrics);
@@ -167,22 +178,16 @@ async function learnCoefficients() {
   // document.querySelector('#start-training-1').addEventListener('click', () => watchTraining());
 }
 
-
 // learnCoefficients();
-
-
-
-
-
 
 const model = tf.sequential();
 
 async function train1() {
   // Create a simple model.
-  model.add(tf.layers.dense({units: 1, inputShape: [1]}));
+  model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
 
   // Prepare the model for training: Specify the loss and the optimizer.
-  model.compile({loss: 'meanSquaredError', optimizer: 'sgd'});
+  model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
 
   // Generate some synthetic data for training. (y = 2x - 1)
   const xs = tf.tensor2d([-1, 0, 1, 2, 3, 4], [6, 1]);
@@ -192,42 +197,45 @@ async function train1() {
   return model.fit(xs, ys, {
     epochs: 50,
   });
-};
-
+}
 
 async function showTrainingHistory() {
   const trainingHistory = await train1();
-  console.log(trainingHistory)
+  console.log(trainingHistory);
 
-  tfVis.show.history({
-    name: 'Training History1',
-    tab: 'Training1'
-  }, trainingHistory, ['loss']);
+  tfVis.show.history(
+    {
+      name: 'Training History1',
+      tab: 'Training1',
+    },
+    trainingHistory,
+    ['loss']
+  );
 }
 
 // showTrainingHistory();
 
-
-
-
-
-import dataTesting from "../../tensorflow/laba1backpropagation/dataTesting"
-import dataTraining from "../../tensorflow/laba1backpropagation/dataTraining"
+import dataTesting from '../../tensorflow/laba1backpropagation/dataTesting';
+import dataTraining from '../../tensorflow/laba1backpropagation/dataTraining';
 
 const trainingData = tf.tensor2d(dataTraining.inputs);
 const outputData = tf.tensor1d(dataTraining.outputs);
 
-const model2 = tf.sequential();
+async function train2(layers, rate, epochs) {
+  const model2 = tf.sequential();
 
-async function train2() {
-  await model2.add(tf.layers.dense({
-    inputShape: [3],
-    units: 2,
-  }));
-  await model2.add(tf.layers.dense({
-    inputShape: [2],
-    units: 1,
-  }));
+  await model2.add(
+    tf.layers.dense({
+      inputShape: [layers[0].in],
+      units: layers[0].out,
+    })
+  );
+  await model2.add(
+    tf.layers.dense({
+      inputShape: [layers[1].in],
+      units: layers[1].out,
+    })
+  );
   // await model2.add(tf.layers.dense({
   //   inputShape: [5],
   //   activation: "softmax",
@@ -235,30 +243,47 @@ async function train2() {
   //   units: 1,
   // }));
   await model2.compile({
-    loss: "meanSquaredError",
-    optimizer: tf.train.adam(0.001),
+    loss: 'meanSquaredError',
+    optimizer: tf.train.adam(rate),
   });
 
-// // train/fit our network
-  return model2.fit(trainingData, outputData, {epochs: 25, shuffle: true})
+  // // train/fit our network
+  return model2.fit(trainingData, outputData, { epochs, shuffle: true });
 }
 
+async function showTrainingHistory2(layers, rate, epochs) {
+  const trainingHistory = await train2(layers, rate, epochs);
 
+  const name = `Model layer0: ${JSON.stringify(layers[0])}; layer[1]: ${JSON.stringify(
+    layers[1]
+  )}; rate ${rate}; epochs: ${epochs}`;
 
-async function showTrainingHistory2() {
-  const trainingHistory = await train2();
-  console.log('2', trainingHistory);
+  console.log(name, ':', trainingHistory);
 
-  tfVis.show.history({
-    name: '2Training History2',
-    tab: '2Training2'
-  }, trainingHistory, ['loss']);
+  trainingHistory.history.loss.splice(0, 5);
 
-  console.log('show 2 train')
+  tfVis.show.history(
+    {
+      name,
+      tab: 'Data',
+    },
+    // slices first 5 entries because the training loss is too high
+    trainingHistory,
+    ['loss']
+  );
 }
 
-showTrainingHistory2();
+(async () => {
+  await showTrainingHistory2([{ in: 3, out: 2 }, { in: 2, out: 1 }], 1, 50);
+})();
 
+(async () => {
+  await showTrainingHistory2([{ in: 3, out: 2 }, { in: 2, out: 1 }], 0.01, 50);
+})();
+
+(async () => {
+  await showTrainingHistory2([{ in: 3, out: 2 }, { in: 2, out: 1 }], 0.0001, 50);
+})();
 
 // TO MAKE THIS INDEX.JS run first build it with
 // parcel index.js

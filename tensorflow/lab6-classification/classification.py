@@ -3,18 +3,20 @@
 # source of this file code  https://www.tensorflow.org/api_docs/python/tf/contrib/factorization/KMeansClustering
 
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 from matplotlib import pyplot as plt
 
-num_points = 100
-dimensions = 2
-points = np.random.uniform(0, 1000, [num_points, dimensions])
+num_points = 56
+dimensions = 8
+# points = np.random.uniform(0, 1000, [num_points, dimensions])
+points = np.genfromtxt("./lab6.csv", delimiter=";", usecols=np.arange(0,7))
 
 def input_fn():
   return tf.train.limit_epochs(
       tf.convert_to_tensor(points, dtype=tf.float32), num_epochs=1)
 
-num_clusters = 2
+num_clusters = 3
 kmeans = tf.contrib.factorization.KMeansClustering(
     num_clusters=num_clusters, use_mini_batch=False)
 
@@ -37,8 +39,7 @@ for i, point in enumerate(points):
   center = cluster_centers[cluster_index]
   color = ("red", "green")[cluster_index == 0]
   plt.plot(point[0], point[1], marker='x', markersize=15, color=color)
-#   print 'point:', point, 'is in cluster', cluster_index, 'centered at', center
-
+  print 'point:', point, 'is in cluster', cluster_index
 
 
 # Label the graph axes.
@@ -57,8 +58,8 @@ for i in range(0, num_points):
 
 plt.scatter(firstEls, secondEls)
 
-plt.plot(cluster_centers[0][0], cluster_centers[0][1], marker='o', markersize=15, color="red")
-plt.plot(cluster_centers[1][0], cluster_centers[1][1], marker='o', markersize=15, color="green")
+plt.plot(cluster_centers[0][0], cluster_centers[0][1], marker='o', markersize=15, color="green")
+plt.plot(cluster_centers[1][0], cluster_centers[1][1], marker='o', markersize=15, color="red")
 
 # Display graph.
 plt.show()

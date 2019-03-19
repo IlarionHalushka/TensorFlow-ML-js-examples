@@ -289,3 +289,4 @@ async function showTrainingHistory2(layers, rate, epochs) {
 // parcel index.js
 // AND in index.html require script with source ./dist/index.js
 // then open index.html in browser and click ` to open up the charts
+

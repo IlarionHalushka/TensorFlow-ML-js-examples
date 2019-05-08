@@ -7,6 +7,4 @@ print(data)
 
 data.fillna(method='bfill',inplace=True)
 
-print('-----------')
-
 print(data)
